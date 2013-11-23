@@ -1,4 +1,5 @@
 import json
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 from django.http import HttpResponse
 from maps.models import Event
@@ -6,6 +7,7 @@ from maps.models import Event
 def index(request):
     return render(request, 'map.html', {'Test': True})
 
+@csrf_exempt
 def newEvent(request):
 	if request.POST.get('latitude') and request.POST.get('longitude'):
 		new_event = Event(
