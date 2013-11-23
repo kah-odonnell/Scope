@@ -27,10 +27,28 @@
         google.maps.event.addListener(map, 'dblclick', function(m) {
           placeMarker(m.latLng, map)
         });
-
+        /*
         google.maps.event.addListener(marker, 'click', function() {
           map.setZoom(16);
           map.setCenter(marker.getPosition());
+        });
+*/
+        
+        $.ajax({
+          type: 'GET',
+          url: '/get/',
+          async: false,
+          success: function(result){
+            var events = $.parseJSON(result);
+            $.each(events, function(i, event_obj) {
+              var name = event_obj['name'];
+              var longitude = event_obj['longitude'];
+              var latitude = event_obj['latitude'];
+              alert(event_obj);
+              var location = new google.maps.LatLng(Number(latitude), Number(longitude));
+              placeMarker(location, map);
+            })
+          }
         });
       }
 
