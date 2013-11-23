@@ -1,27 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <style type="text/css">
-      html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
-      #map-canvas { height: 100% }
-    </style>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/site_media/favicon.png">
+
+    <title>For your Teeth</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./site_media/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./site_media/site.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFOcJTlTqElkeDRFcXylFe23dOMPn9Ak4&sensor=false">
     </script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.2.1/underscore-min.js'></script>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.5.3/backbone-min.js'></script>
-    <script type="text/javascript" src='/site_media/site.js'></script>
-  </head>
-  <body>
-    <div style="width: 200px; height: 100%; float: right;">
-      {% block content %}
-
-      {% endblock %}
-    </div>
-    <div id="map-canvas">
-    </div>
-  </body>
-</html>
+      <script type="text/javascript" src='/site_media/site.js'></script>
+    </head>
+    <body>
+      <div class=container>
+        <div class="row" id=top-bar>
+          <div class="col-sm-5 col-sm-offset-1"> Scope --<em> is for your teeth</em> </div>
+          <div class="col-sm-offset-2 col-sm-4"> 
+            <div class="btn-group">
+              <button type="button" class="btn btn-default">What...?</button>
+              <button type="button" onclick=open_login() class="btn btn-default">Login</button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div id=left class=col-sm-2>left-side</div>
+          <div class=col-sm-8> 
+            <div id="map-canvas"></div>
+          </div>
+          <div id=right class=col-sm-2> right-side</div>
+        </div>
+      </div>
+      <!-- Bootstrap core JavaScript
+      ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script src="./site_media/dist/js/bootstrap.min.js"></script>
+    </body>
+  </html>
