@@ -1,0 +1,29 @@
+.info-window {
+  width: 250px;
+  height: 60px;
+}
+#map-canvas {
+  height: 300px;
+  padding-left: 30px;
+}
+#left {
+  margin-left: -15px;
+}
+#right {
+  margin-right: -15px;
+}
+body {
+}
+#top-bar {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.login{
+  position:absolute;
+  width:320px;
+  height:250px;
+  z-index:15;
+  top:50%;
+  left:50%;
+  margin:-125px 0 0 -160px;
+}
