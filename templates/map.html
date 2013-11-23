@@ -10,25 +10,42 @@
     <script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFOcJTlTqElkeDRFcXylFe23dOMPn9Ak4&sensor=false">
     </script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.2.1/underscore-min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.5.3/backbone-min.js'></script>
     <script type="text/javascript">
       function initialize() {
         var mapOptions = {
-          center: new google.maps.LatLng(-34.397, 150.644),
-          zoom: 8
+          zoom: 16,
+          disableDoubleClickZoom: true,
+          center: new google.maps.LatLng(38.03561521701325, -78.50336015224457)
         };
-        var map = new google.maps.Map(document.getElementById("map-canvas"),
+
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions);
-        GEvent.addListener(map, "click", function(overlay, latLng){
-            // display the lat/lng in your form's lat/lng fields
-            alert(latLng.lat(), latLng.lng(), map.getZoom())
-            document.getElementById("latFld").value = latLng.lat();
-            document.getElementById("lngFld").value = latLng.lng();
+
+        google.maps.event.addListener(map, 'dblclick', function(m) {
+          placeMarker(m.latLng, map)
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+          map.setZoom(16);
+          map.setCenter(marker.getPosition());
         });
       }
+
+      function placeMarker(location, map) {
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map
+        });
+      }
+
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
   </head>
   <body>
-    <div style="width: 100%, length: 100%" id="map-canvas"/>
+    <div style="width: 200px; height: 100%; float: right;"></div>
+    <div id="map-canvas"></div>
   </body>
 </html>
