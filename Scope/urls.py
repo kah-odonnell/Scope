@@ -24,5 +24,6 @@ urlpatterns = patterns('',
     url(r'^register/', views.register_organization),
     url(r'^signup/', views.sign_up),
     url(r'^login/', views.login),
-    url(r'^addmap/', views.add_map)
+    url(r'^addmap/', views.add_map),
+    url(r'^mobile/(?P<lat>.*)/(?P<lng>.*)/', views.mobile)
 )

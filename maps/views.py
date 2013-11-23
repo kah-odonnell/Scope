@@ -6,6 +6,16 @@ from maps.models import Event, Organization, Account, User
 from twilio.rest import TwilioRestClient
 from datetime import datetime
 from dateutil import parser
+import requests
+import json
+
+def goo_shorten_url(url):
+    post_url = 'https://www.googleapis.com/urlshortener/v1/url'
+    payload = {'longUrl': url}
+    headers = {'content-type': 'application/json'}
+    r = requests.post(post_url, data=json.dumps(payload), headers=headers)
+    x = json.loads(r.text)
+    return x['id']
 
 def index(request):
 	return render(request, 'map.html', {'Test': True})
@@ -25,6 +35,9 @@ def newEvent(request):
 			date=datetime.strptime(request.POST['date'], "%m/%d/%Y"),
 			time=request.POST['time']
 		)
+		url = "http://172.27.122.115:8080/mobile/"+request.POST['latitude']+"/"+request.POST['longitude']+"/"
+		new_url = goo_shorten_url(url)
+		print new_url
 		new_event.save()
 		interested = User.objects.filter(organizations=org)
 		
@@ -35,7 +48,7 @@ def newEvent(request):
 		for user in interested:
 			phone = "+" + user.phone
 			message = org.name+" has created a new event, "+request.POST['name']+"! It's at "+request.POST['time']+" on "+request.POST['date']+"."
-			message = message
+			message = message + " Check it: "+new_url
 			message = client.messages.create(body=message,
 		    	to=phone,
 		    	from_= "+17579417098")
@@ -118,3 +131,10 @@ def login(request):
 
 def add_map(request):
 	return render(request, 'adminmap.html', {'organization': request.session['organization']})
+
+def mobile(request, lat="", lng=""):
+	return render(request, 'mobilemap.html', {
+		'lat': lat,
+		'lng': lng
+	})
+
