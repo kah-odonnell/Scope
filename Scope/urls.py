@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index),
+    url(r'^$', views.sign_up),
     url(r'^add/', views.newEvent),
     url(r'^get/', views.getEvents),
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
@@ -24,5 +24,6 @@ urlpatterns = patterns('',
     url(r'^register/', views.register_organization),
     url(r'^signup/', views.sign_up),
     url(r'^login/', views.login),
-    url(r'^addmap/', views.add_map)
+    url(r'^addmap/', views.add_map),
+    url(r'^mobile/(?P<lat>.*)/(?P<lng>.*)/', views.mobile)
 )

@@ -1,63 +1,35 @@
 var markers = new Array();
+var markerPoints = new Array();
+var map;
 
 function initialize() {
-  var mapOptions = {
-    zoom: 16,
-    disableDoubleClickZoom: true,
-    center: new google.maps.LatLng(38.03561521701325, -78.50336015224457)
-  };
-
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-                                mapOptions);
-
-                                //Creating a new marker on double-click
-                                google.maps.event.addListener(map, 'dblclick', function(m) {
-                                  placeMarker(m.latLng, map, false, true)
-                                });
-
-                                //Populate with data from the server
-                                $.ajax({
-                                  type: 'GET',
-                                  url: '/get/',
-                                  async: false,
-                                  success: function(result){
-                                    var events = $.parseJSON(result);
-                                    $.each(events, function(i, event_obj) {
-                                      var data = event_obj
-                                      var longitude = event_obj['longitude'];
-                                      var latitude = event_obj['latitude'];
-                                      var location = new google.maps.LatLng(Number(latitude), Number(longitude));
-                                      placeMarker(location, map, data);
-                                    })
-                                  }
-                                });
-}
-
-function login() {
-  var url = "/login/&password" + $("")
-  //Populate with data from the server
-  $.ajax({
-    type: 'POST',
-    url: url,
-    async: false,
-    success: function(result){
-      var events = $.parseJSON(result);
-      $.each(events, function(i, event_obj) {
-        console.log(i);
-      });
-    }});
-    $("container").css("opacity", 1);
-}
-function open_login() {
-  $("login").remove();
-  var login = "<form class='login' action=/login/ method=post>\
-  <h3 class='form-signin-heading'>Login to post events!</h3>\
-  <input id=org type='text' class='form-control' placeholder='organization' required='' autofocus=''>\
-  <input id=pass type='password' class='form-control' placeholder='Password' required=''>\
-  <button class='btn btn-lg btn-primary btn-block' action=submit>Sign in</button>\
-  </div>";
-  $("body").append(login);
-  $("container").css("opacity", "0.5");
+    var mapOptions = {
+        zoom: 16,
+        disableDoubleClickZoom: true,
+        center: new google.maps.LatLng(38.03561521701325, -78.50336015224457)
+    };
+    
+    map = new google.maps.Map(document.getElementById('map-canvas'),
+				  mapOptions);
+    
+    //Creating a new marker on double-click
+    
+    //Populate with data from the server
+    $.ajax({
+        type: 'GET',
+        url: '/get/',
+        async: false,
+        success: function(result){
+            var events = $.parseJSON(result);
+            $.each(events, function(i, event_obj) {
+        	var data = event_obj
+        	var longitude = event_obj['longitude'];
+        	var latitude = event_obj['latitude'];
+        	var location = new google.maps.LatLng(Number(latitude), Number(longitude));
+        	placeMarker(location, map, data);
+            })
+	}
+    });
 }
 
 function placeMarker(location, map, data, info_window) {
@@ -76,15 +48,20 @@ function placeMarker(location, map, data, info_window) {
       {
       content: html
     });
-    event_form_info_window.open(map, marker);
-  } else {
+    markerPoints.push(marker);
+
     google.maps.event.addListener(marker, 'click', function(m) {
-      var info_pane = "<div id='infoWindow'><span>" + data['name'] + "</span></div>";
-      var event_form_info_window = new google.maps.InfoWindow(
-        {
-        content: info_pane
-      });
-      event_form_info_window.open(map, marker);
+        $.each(markers, function(i, pane){
+            pane.close();
+        });
+        var info_pane = 
+        "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br><span>" + data['date'] + "</span><br><span>" + data['time'] + "</span><br></div>" ;
+        var event_form_info_window = new google.maps.InfoWindow(
+		{
+                    content: info_pane
+		});
+        event_form_info_window.open(map, marker);
+        markers.push(event_form_info_window);
     });
   }
 }
@@ -108,4 +85,70 @@ function submitEvent() {
   result.error(function() { alert("Something went wrong"); });
 }
 
+function setAllMap(m) {
+    for (var i = 0; i < markerPoints.length; i++) {
+	markerPoints[i].setMap(m);
+    }
+}
+function clearMarkers() {
+    setAllMap(null);
+    markerPoints = [];
+}
+
 google.maps.event.addDomListener(window, 'load', initialize);
+
+$(document).ready(function() { 
+    // bind 'myForm' and provide a simple callback function 
+    $('#notify_button').click(function() { 
+        $('#login').css('display','none');
+        $('#register').css('display','none');
+        $('#signup').css('display','inline');
+    }); 
+    $('#login_button').click(function() { 
+        $('#login').css('display','inline');
+        $('#register').css('display','none');
+        $('#signup').css('display','none');
+    }); 
+    $('#register_button').click(function() { 
+        $('#login').css('display','none');
+        $('#register').css('display','inline');
+        $('#signup').css('display','none');
+    }); 
+    $('#myForm').ajaxForm(function() { 
+        $('#signup').css('display','none');
+    }); 
+    $("#slider").dateRangeSlider({
+	defaultValues: {
+	    min: new Date(2013, 0, 1),
+	    max: new Date(2013, 11, 31)
+	},
+	bounds: {
+	    min: new Date(2013, 0, 1),
+	    max: new Date(2013, 11, 31)
+	}});
+    $("#slider").bind("valuesChanged", function(e, data) {
+	var start = String(data.values.min);
+	var end = String(data.values.max);
+	start = start.replace(/\(.*\)/g, "");
+	end = end.replace(/\(.*\)/g, "");
+	var getdata = "start=" + start +"&end=" + end;
+	$.ajax({
+            type: 'GET',
+	    data: getdata,
+            url: '/get/',
+            async: false,
+            success: function(result){
+		clearMarkers();
+		var events = $.parseJSON(result);
+		$.each(events, function(i, event_obj) {
+        	    var data = event_obj
+        	    var longitude = event_obj['longitude'];
+        	    var latitude = event_obj['latitude'];
+        	    var location = new google.maps.LatLng(Number(latitude), Number(longitude));
+        	    placeMarker(location, map, data);
+		})
+		    }});
+	
+	console.log("Values changed. min: " + data.values.min + ", max: " + data.values.max);
+    });
+}); 

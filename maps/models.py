@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 class Organization(models.Model):
     name = models.CharField(max_length=100)
@@ -11,6 +12,8 @@ class Event(models.Model):
     latitude = models.DecimalField(max_digits=20, decimal_places=18)
     name = models.CharField(max_length=100)
     organization = models.ForeignKey(Organization)
+    date = models.DateTimeField(auto_now_add=False)
+    time = models.CharField(max_length=20)
   
     def as_json(self):
     	return dict(
@@ -18,7 +21,9 @@ class Event(models.Model):
     		longitude = str(self.longitude),
     		name = self.name,
    			id = str(self.id),
-   			organization = str(self.organization)
+   			organization = str(self.organization),
+   			date = datetime.strftime(self.date,"%m/%d/%Y"),
+   			time = self.time
     	)
 
     def __unicode__(self):
