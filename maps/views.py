@@ -6,6 +6,7 @@ from maps.models import Event, Organization, Account, User
 from twilio.rest import TwilioRestClient
 from datetime import datetime
 from dateutil import parser
+from secrets import AUTH_TOKEN
 import requests
 import json
 
@@ -43,7 +44,7 @@ def newEvent(request):
 		
 		#Make Twilio call here
 		account_sid = "ACacb8b149f72c6d38c6e789a8dc6dd0d5"
-		auth_token  = "48b1149246296d1c61e70d43e770b5a3"
+		auth_token  = AUTH_TOKEN
 		client = TwilioRestClient(account_sid, auth_token)
 		for user in interested:
 			phone = "+" + user.phone
