@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from maps.models import Event, Organization, Account, User
 from twilio.rest import TwilioRestClient
 from datetime import datetime
+from dateutil import parser
 
 def index(request):
 	return render(request, 'map.html', {'Test': True})
@@ -43,7 +44,14 @@ def newEvent(request):
 
 def getEvents(request):
 	if request.method == 'GET':
-		events = Event.objects.all()
+		events = None
+		if not request.GET.get('start'):
+			events = Event.objects.all()
+		else:
+			starttime = parser.parse(request.GET.get('start'))
+			endtime = parser.parse(request.GET.get('end'))
+			events = Event.objects.filter(date__gt=starttime, date__lt=endtime)
+
 		event_list = [event.as_json() for event in events]
 		json_string = json.dumps(event_list)
 		return HttpResponse(json_string)
