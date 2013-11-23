@@ -11,6 +11,7 @@ function initialize() {
     
     map = new google.maps.Map(document.getElementById('map-canvas'),
 				  mapOptions);
+
     
     //Creating a new marker on double-click
     
@@ -50,9 +51,9 @@ function placeMarker(location, map, data, info_window) {
         var info_pane = 
         "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br><span>" + data['date'] + "</span><br><span>" + data['time'] + "</span><br></div>" ;
         var event_form_info_window = new google.maps.InfoWindow(
-		{
+        {
                     content: info_pane
-		});
+        });
         event_form_info_window.open(map, marker);
         markers.push(event_form_info_window);
     });
@@ -60,7 +61,7 @@ function placeMarker(location, map, data, info_window) {
 
 function setAllMap(m) {
     for (var i = 0; i < markerPoints.length; i++) {
-	markerPoints[i].setMap(m);
+    markerPoints[i].setMap(m);
     }
 }
 function clearMarkers() {
@@ -91,37 +92,37 @@ $(document).ready(function() {
         $('#signup').css('display','none');
     }); 
     $("#slider").dateRangeSlider({
-	defaultValues: {
-	    min: new Date(2013, 0, 1),
-	    max: new Date(2013, 11, 31)
-	},
-	bounds: {
-	    min: new Date(2013, 0, 1),
-	    max: new Date(2013, 11, 31)
-	}});
+    defaultValues: {
+        min: new Date(2013, 0, 1),
+        max: new Date(2013, 11, 31)
+    },
+    bounds: {
+        min: new Date(2013, 0, 1),
+        max: new Date(2013, 11, 31)
+    }});
     $("#slider").bind("valuesChanged", function(e, data) {
-	var start = String(data.values.min);
-	var end = String(data.values.max);
-	start = start.replace(/\(.*\)/g, "");
-	end = end.replace(/\(.*\)/g, "");
-	var getdata = "start=" + start +"&end=" + end;
-	$.ajax({
+    var start = String(data.values.min);
+    var end = String(data.values.max);
+    start = start.replace(/\(.*\)/g, "");
+    end = end.replace(/\(.*\)/g, "");
+    var getdata = "start=" + start +"&end=" + end;
+    $.ajax({
             type: 'GET',
-	    data: getdata,
+        data: getdata,
             url: '/get/',
             async: false,
             success: function(result){
-		clearMarkers();
-		var events = $.parseJSON(result);
-		$.each(events, function(i, event_obj) {
-        	    var data = event_obj
-        	    var longitude = event_obj['longitude'];
-        	    var latitude = event_obj['latitude'];
-        	    var location = new google.maps.LatLng(Number(latitude), Number(longitude));
-        	    placeMarker(location, map, data);
-		})
-		    }});
-	
-	console.log("Values changed. min: " + data.values.min + ", max: " + data.values.max);
+        clearMarkers();
+        var events = $.parseJSON(result);
+        $.each(events, function(i, event_obj) {
+                var data = event_obj
+                var longitude = event_obj['longitude'];
+                var latitude = event_obj['latitude'];
+                var location = new google.maps.LatLng(Number(latitude), Number(longitude));
+                placeMarker(location, map, data);
+        })
+            }});
+    
+    console.log("Values changed. min: " + data.values.min + ", max: " + data.values.max);
     });
 }); 
