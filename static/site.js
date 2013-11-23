@@ -44,7 +44,7 @@ function placeMarker(location, map, data, info_window) {
             pane.close();
         });
         var info_pane = 
-        "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br></div>";
+        "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br><span>" + data['date'] + "</span><br><span>" + data['time'] + "</span><br></div>" ;
         var event_form_info_window = new google.maps.InfoWindow(
 		{
                     content: info_pane
@@ -55,3 +55,25 @@ function placeMarker(location, map, data, info_window) {
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
+
+$(document).ready(function() { 
+    // bind 'myForm' and provide a simple callback function 
+    $('#notify_button').click(function() { 
+        $('#login').css('display','none');
+        $('#register').css('display','none');
+        $('#signup').css('display','inline');
+    }); 
+    $('#login_button').click(function() { 
+        $('#login').css('display','inline');
+        $('#register').css('display','none');
+        $('#signup').css('display','none');
+    }); 
+    $('#register_button').click(function() { 
+        $('#login').css('display','none');
+        $('#register').css('display','inline');
+        $('#signup').css('display','none');
+    }); 
+    $('#myForm').ajaxForm(function() { 
+        $('#signup').css('display','none');
+    }); 
+}); 

@@ -16,7 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.index),
+    url(r'^$', views.sign_up),
     url(r'^add/', views.newEvent),
     url(r'^get/', views.getEvents),
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',

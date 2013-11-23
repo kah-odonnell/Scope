@@ -1,17 +1,33 @@
-{% extends "base.html" %}
+{% extends "map.html" %}
 
-{% block title %} Register {% endblock %}
+{% block title %} Scope! {% endblock %}
 
 {% block content %}
 	{% if failed %}
 	Registration Failed! Please Try Again.
 	{% endif %}
-    <form action="/signup/" method="post">
+    <form id="signup" action="/signup/" method="post">
+    	<div>Get Alerts!</div>
     	{% csrf_token %}
     	<input type="text" name="phone" placeholder="Phone Number"><br>
     	{% for org in organizations %}
     	<input type="checkbox" name="{{org}}" value="{{org}}">{{org}}<br>
     	{% endfor %}
+    	<input type="submit" value="Submit">
+    </form>
+    <form id="register" style="display: none" action="/register/" method="post">
+    	<div>Register!</div>
+    	{% csrf_token %}
+    	<input type="text" name="organization" placeholder="Organization"><br>
+    	<input type="password" name="password" placeholder="Password"><br>
+    	<input type="password" name="confirmpw" placeholder="Confirm Password"><br>
+    	<input type="submit" value="Submit">
+    </form>
+    <form id="login" style="display: none" action="/login/" method="post">
+    	<div>Login!</div>
+    	{% csrf_token %}
+    	<input type="text" name="organization" placeholder="Organization"><br>
+    	<input type="password" name="password" placeholder="Password"><br>
     	<input type="submit" value="Submit">
     </form>
 {% endblock %}
