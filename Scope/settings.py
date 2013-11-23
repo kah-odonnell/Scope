@@ -117,6 +117,8 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',

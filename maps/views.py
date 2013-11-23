@@ -5,17 +5,25 @@ from django.http import HttpResponse, HttpResponseRedirect
 from maps.models import Event, Organization, Account, User
 
 def index(request):
-    return render(request, 'map.html', {'Test': True})
+	return render(request, 'map.html', {'Test': True})
 
 @csrf_exempt
 def newEvent(request):
+	try:
+		org = Organization.objects.get(name=request.session['organization'])
+	except:
+		return HttpResponse('Failed to find organization')
 	if request.POST.get('latitude') and request.POST.get('longitude'):
 		new_event = Event(
 			latitude=request.POST['latitude'],
 			longitude=request.POST['longitude'],
-			name=request.POST['name']
+			name=request.POST['name'],
+			organization=org
 		)
 		new_event.save()
+		interested = User.objects.filter(organizations=org)
+		for user in interested:
+			user.pho
 		return HttpResponse('Saved event.')
 
 def getEvents(request):
@@ -34,13 +42,10 @@ def register_organization(request):
 				'failed': True,
 			})
 		else: 
-			try:
-				org = Organization.objects.get(name=request.POST['organization'])
-			except:
-				org = Organization(name=request.POST['organization'])
-				org.save()
+			org = Organization(name=request.POST['organization'])
+			org.save()
 			account = Account(
-				username=request.POST['username'],
+				username=request.POST['organization'],
 				password=request.POST['password'],
 				organization=org
 			)
@@ -62,9 +67,29 @@ def sign_up(request):
 		new_user.save()
 		organizations = Organization.objects.all()
 		for org in organizations:
-			try:
-				picked_org = request.POST.get(org.name)
-				new_user.add(org)
-			except:
-				pass
+			if request.POST.get(org.name):
+				new_user.organizations.add(org)
 		return HttpResponseRedirect('/')
+
+def login(request):
+	if request.method == 'POST':
+		try:
+			m = Account.objects.get(username=request.POST['organization'])
+		except:
+			return render(request, 'login.html', {
+				'failed': True
+			})
+		if m.password == request.POST['password']:
+			request.session['organization'] = m.organization.name
+			return HttpResponseRedirect('/addmap/')
+		else:
+			return render(request, 'login.html', {
+				'failed': True
+			})
+	if request.method == 'GET':
+		return render(request, 'login.html', {
+			'failed': False
+		})
+
+def add_map(request):
+	return render(request, 'adminmap.html', {})

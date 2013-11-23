@@ -23,4 +23,6 @@ urlpatterns = patterns('',
         {'document_root': settings.SETTINGS_PATH + '/../static'}),
     url(r'^register/', views.register_organization),
     url(r'^signup/', views.sign_up),
+    url(r'^login/', views.login),
+    url(r'^addmap/', views.add_map)
 )

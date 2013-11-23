@@ -1,16 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %} Register {% endblock %}
+{% block title %} Login {% endblock %}
 
 {% block content %}
 	{% if failed %}
-	Registration Failed! Please Try Again.
+	Login Failed! Please Try Again.
 	{% endif %}
-    <form action="/register/" method="post">
+    <form action="/login/" method="post">
     	{% csrf_token %}
     	<input type="text" name="organization" placeholder="Organization"><br>
     	<input type="password" name="password" placeholder="Password"><br>
-    	<input type="password" name="confirmpw" placeholder="Confirm Password"><br>
     	<input type="submit" value="Submit">
     </form>
 {% endblock %}

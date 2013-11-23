@@ -1,3 +1,5 @@
+var markers = new Array();
+
 function initialize() {
     var mapOptions = {
         zoom: 16,
@@ -9,9 +11,6 @@ function initialize() {
 				  mapOptions);
     
     //Creating a new marker on double-click
-    google.maps.event.addListener(map, 'dblclick', function(m) {
-        placeMarker(m.latLng, map, false, true)
-    });
     
     //Populate with data from the server
     $.ajax({
@@ -21,11 +20,11 @@ function initialize() {
         success: function(result){
             var events = $.parseJSON(result);
             $.each(events, function(i, event_obj) {
-		var data = event_obj
-		var longitude = event_obj['longitude'];
-		var latitude = event_obj['latitude'];
-		var location = new google.maps.LatLng(Number(latitude), Number(longitude));
-		placeMarker(location, map, data);
+        		var data = event_obj
+        		var longitude = event_obj['longitude'];
+        		var latitude = event_obj['latitude'];
+        		var location = new google.maps.LatLng(Number(latitude), Number(longitude));
+        		placeMarker(location, map, data);
             })
 		}
     });
@@ -37,46 +36,22 @@ function placeMarker(location, map, data, info_window) {
     var marker = new google.maps.Marker({
         position: location,
         map: map,
-        name: (data['name'] || false)
+        name: (data['name'] || false),
+        org: (data['organization'] || false)
     });
-    if ( info_window ) {
-        var html = "<div id='infoWindow'><label for='eventName'>Name:</label> <input type='text' id='eventName' /><br />" +
-            "<input type='hidden' id='eventLat' value='" + location.lat() + "' /><input type='hidden' id='eventLon' value='" + location.lng() + "' />" +
-            "<input type='button' id='eventSubmit' value='Save' onclick='submitEvent()' /></div>";
+    google.maps.event.addListener(marker, 'click', function(m) {
+        $.each(markers, function(i, pane){
+            pane.close();
+        });
+        var info_pane = 
+        "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br></div>";
         var event_form_info_window = new google.maps.InfoWindow(
-            {
-		content: html
-            });
-        event_form_info_window.open(map, marker);
-    } else {
-        google.maps.event.addListener(marker, 'click', function(m) {
-            var info_pane = "<div id='infoWindow'><span>" + data['name'] + "</span></div>";
-            var event_form_info_window = new google.maps.InfoWindow(
 		{
                     content: info_pane
 		});
-            event_form_info_window.open(map, marker);
-        });
-    }
-}
-
-function submitEvent() {
-    var name = $("#eventName").val();
-    var latitude = $("#eventLat").val();
-    var longitude = $("#eventLon").val();
-    var event_obj = {name: name, latitude: latitude, longitude: longitude};
-    
-    var result = $.ajax({
-        type: 'POST',
-        data: event_obj,
-        dataType: 'text',
-        url: '/add/',
-        success: function() {
-            $("#infoWindow").html("<p>Success!</p>");
-        }
-        
+        event_form_info_window.open(map, marker);
+        markers.push(event_form_info_window)
     });
-    result.error(function() { alert("Something went wrong"); });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
