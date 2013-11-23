@@ -68,7 +68,7 @@ function placeMarker(location, map, data, info_window) {
             pane.close();
         });
         var info_pane = 
-        "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br><span>" + data['date'] + "</span><br><span>" + data['time'] + "</span><br></div>" ;
+        "<div style='width: 200px; height: 100px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br><span>" + data['date'] + "</span><br><span>" + data['time'] + "</span><br></div>" ;
         var event_form_info_window = new google.maps.InfoWindow(
         {
                     content: info_pane
