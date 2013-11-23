@@ -100,7 +100,11 @@ $(document).ready(function() {
 	    max: new Date(2013, 11, 31)
 	}});
     $("#slider").bind("valuesChanged", function(e, data) {
-	var getdata = "start=" + data.values.min +"&end=" + data.values.max;
+	var start = String(data.values.min);
+	var end = String(data.values.max);
+	start = start.replace(/\(.*\)/g, "");
+	end = end.replace(/\(.*\)/g, "");
+	var getdata = "start=" + start +"&end=" + end;
 	$.ajax({
             type: 'GET',
 	    data: getdata,
