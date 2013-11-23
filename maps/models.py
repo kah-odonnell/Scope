@@ -23,3 +23,14 @@ class Organization(models.Model):
     
     def __unicode__(self):
         return self.name
+
+class Account(models.Model):
+	username = models.CharField(max_length=100)
+	password = models.CharField(max_length=100)
+	organization = models.ForeignKey(Organization)
+
+class User(models.Model):
+	phone = models.CharField(max_length=11)
+	organizations = models.ManyToManyField(Organization)
+
+

@@ -20,5 +20,7 @@ urlpatterns = patterns('',
     url(r'^add/', views.newEvent),
     url(r'^get/', views.getEvents),
     url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
-        {'document_root': settings.SETTINGS_PATH + '/../static'})
+        {'document_root': settings.SETTINGS_PATH + '/../static'}),
+    url(r'^register/', views.register_organization),
+    url(r'^signup/', views.sign_up),
 )

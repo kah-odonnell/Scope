@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+	{% if failed %}
+	Registration Failed! Please Try Again.
+	{% endif %}
+    <form action="/signup/" method="post">
+    	{% csrf_token %}
+    	<input type="text" name="phone" placeholder="Phone Number"><br>
+    	{% for org in organizations %}
+    	<input type="checkbox" name="vehicle" value="{{org}}">{{org}}<br>
+    	{% endfor %}
+    	<input type="submit" value="Submit">
+    </form>
+{% endblock %}
