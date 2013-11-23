@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+       #content{
+        position:relative;
+        bottom:0px;
+        width:100%;
+        height:100%;
+      }
+        #header{
+          position:relative;
+          bottom:0px;
+          width:100%;
+          height:60px;    /* Edit for height of header*/
+          background:#f00;
+        }
+        #inner{
+          width:100%;
+          position: absolute; 
+          display: table-cell; 
+        }
+        #footer{
+          position:absolute;
+          bottom:0px;
+          width:100%;
+          height:160px;   /* Edit for height of footer */
+          background:#0f0;
+        }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFOcJTlTqElkeDRFcXylFe23dOMPn9Ak4&sensor=false">
+    </script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/1.7/jquery.min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.2.1/underscore-min.js'></script>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/backbone.js/0.5.3/backbone-min.js'></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script> 
+    <script>
+var markers = new Array();
+
+function initialize() {
+    var mapOptions = {
+        zoom: 18,
+        disableDoubleClickZoom: true,
+        center: new google.maps.LatLng({{lat}}, {{lng}})
+    };
+    
+    var map = new google.maps.Map(document.getElementById('map-canvas'),
+          mapOptions);
+    
+    //Creating a new marker on double-click
+    
+    //Populate with data from the server
+    $.ajax({
+        type: 'GET',
+        url: '/get/',
+        async: false,
+        success: function(result){
+            var events = $.parseJSON(result);
+            $.each(events, function(i, event_obj) {
+            var data = event_obj
+            var longitude = event_obj['longitude'];
+            var latitude = event_obj['latitude'];
+            var location = new google.maps.LatLng(Number(latitude), Number(longitude));
+            placeMarker(location, map, data);
+            })
+    }
+    });
+}
+
+function placeMarker(location, map, data, info_window) {
+    var info_window = info_window || false;
+    var data = data || false
+    var marker = new google.maps.Marker({
+        position: location,
+        map: map,
+        name: (data['name'] || false),
+        org: (data['organization'] || false)
+    });
+    google.maps.event.addListener(marker, 'click', function(m) {
+        $.each(markers, function(i, pane){
+            pane.close();
+        });
+        var info_pane = 
+        "<div style='width: 200px; height: 200px;' id='infoWindow'><span>" + data['name'] + "</span><br><span>" + data['organization'] + "</span><br><span>" + data['date'] + "</span><br><span>" + data['time'] + "</span><br></div>" ;
+        var event_form_info_window = new google.maps.InfoWindow(
+    {
+                    content: info_pane
+    });
+        event_form_info_window.open(map, marker);
+        markers.push(event_form_info_window)
+    });
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body style="font-family: 'Open Sans', sans-serif;">
+    <div id="map-canvas">
+    </div>
+  </body>
+</html>
