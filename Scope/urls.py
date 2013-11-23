@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.conf import settings
 from maps import views
 
 # Uncomment the next two lines to enable the admin:
@@ -17,5 +18,7 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.index),
     url(r'^add/', views.newEvent),
-    url(r'^get/', views.getEvents)
+    url(r'^get/', views.getEvents),
+    url(r'^site_media/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.SETTINGS_PATH + '/../static'})
 )
